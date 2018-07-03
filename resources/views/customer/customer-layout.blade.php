@@ -15,6 +15,8 @@
             @yield('customer-welcome-content')
             @yield('customer-profile')
             @yield('edit-profile-form')
+            @yield('bus-list')
+            @yield('booking-form')
         @include('customer.customer-footer')
     </body>
 </html>

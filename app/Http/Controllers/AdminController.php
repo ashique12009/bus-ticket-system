@@ -68,6 +68,7 @@ class AdminController extends Controller
     		Session::flash('msg', 'Selected Bus has been deleted successfully');
     		return redirect('admin/bus-list');
     	}
+    	Session::flash('msg', 'One of a customer booked one or more seat already so this bus cannot be deleted right now.');
     	return redirect('admin/bus-list');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Customer;
 use Session;
+use DB;
 
 class CustomerController extends Controller
 {
@@ -55,14 +56,53 @@ class CustomerController extends Controller
             ];
             Customer::where('user_id', $user_id)->update($update_data);
             Session::flash('msg', 'Customer information updated successfully');
-            // return redirect('edit-profile-form')->with('msg', 'Customer information updated successfully');
             return redirect('edit-profile-form');
         }
     }
 
-    public function showBookingForm()
+    public function showBusList()
     {
-        return view('booking-form');
+        $bus_info = DB::table('buses')->get();
+        return view('customer.customer-bus-list', ['bus_info' => $bus_info]);
+    }
+
+    public static function getAvailableSeat($id)
+    {
+        $bus_info = DB::table('buses')->where('id', $id)->get();
+        $total_seat = $bus_info[0]->total_seat;
+        $booked_seat = DB::table('booking')->where('bus_id', $id)->count();
+        return $total_seat - $booked_seat;
+    }
+
+    public function showBusSeatDetail($id)
+    {
+        $bus_info = DB::table('buses')->where('id', $id)->get();
+        //Make array for available seat numbers
+        $booking_info = DB::table('booking')->where('bus_id', $id)->where('status', 0)->get();
+        $available_seat_no = [];
+        if ( count($booking_info) > 0 ) {
+
+        }
+        return view('customer.booking-form', ['bus_info' => $bus_info, 'available_seat_no' => $available_seat_no]);
+    }
+
+    public function bookingNow(Request $request)
+    {
+        $user_id = auth()->user()->id;
+        $bus_id = $request->get('bus_id');
+        $seat_no = $request->get('seat_no');
+
+        $insertData = [
+            'user_id'       => $user_id,
+            'bus_id'        => $bus_id,
+            'seat_no'       => $seat_no,
+            'status'        => 1,
+            'created_at'    => \Carbon\Carbon::now(),
+            'updated_at'    => \Carbon\Carbon::now()
+        ];
+        DB::table('booking')->insert($insertData);
+        Session::flash('msg', 'Seat Booking has been done successfully');
+        return redirect('show-bus-list');
     }
 
 }

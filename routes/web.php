@@ -30,6 +30,9 @@ Route::post('update-profile-info', 'CustomerController@updateProfileInfo')->name
 
 // Booking Routes
 Route::get('booking-form', 'CustomerController@showBookingForm');
+Route::post('booking-now', 'CustomerController@bookingNow')->name('booking-now');
+Route::get('show-bus-list', 'CustomerController@showBusList');
+Route::get('show-bus-seat-detail/{id}', 'CustomerController@showBusSeatDetail');
 
 // Admin Route
 Route::get('admin/login', 'BusAuthController@showAdminLoginForm');
