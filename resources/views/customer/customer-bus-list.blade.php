@@ -21,6 +21,9 @@ use \App\Http\Controllers\CustomerController;
           @if ( Session::has('msg') )
             <p class="alert alert-info">{{ Session::get('msg') }}</p>
           @endif
+          @if ( Session::has('err-msg') )
+            <p class="alert alert-danger">{{ Session::get('err-msg') }}</p>
+          @endif
 
           <div class="col-md-12 col-lg-12">
               <table class="table table-user-information">

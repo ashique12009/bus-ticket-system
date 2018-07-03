@@ -92,17 +92,29 @@ class CustomerController extends Controller
         $bus_id = $request->get('bus_id');
         $seat_no = $request->get('seat_no');
 
-        $insertData = [
-            'user_id'       => $user_id,
-            'bus_id'        => $bus_id,
-            'seat_no'       => $seat_no,
-            'status'        => 1,
-            'created_at'    => \Carbon\Carbon::now(),
-            'updated_at'    => \Carbon\Carbon::now()
-        ];
-        DB::table('booking')->insert($insertData);
-        Session::flash('msg', 'Seat Booking has been done successfully');
-        return redirect('show-bus-list');
+        //Check this seat is free in this bus or not
+        $check = DB::table('booking')
+                    ->where('bus_id', $bus_id)
+                    ->where('seat_no', $seat_no)
+                    ->where('status', 1)
+                    ->count();
+        if ( $check == 0 ) {
+            $insertData = [
+                'user_id'       => $user_id,
+                'bus_id'        => $bus_id,
+                'seat_no'       => $seat_no,
+                'status'        => 1,
+                'created_at'    => \Carbon\Carbon::now(),
+                'updated_at'    => \Carbon\Carbon::now()
+            ];
+            DB::table('booking')->insert($insertData);
+            Session::flash('msg', 'Seat Booking has been done successfully');
+            return redirect('show-bus-list');
+        } 
+        else {
+            Session::flash('err-msg', 'This Seat is Unavailable');
+            return redirect('show-bus-list');
+        }
     }
 
 }
