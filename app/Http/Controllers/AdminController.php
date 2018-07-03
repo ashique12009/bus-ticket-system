@@ -59,4 +59,15 @@ class AdminController extends Controller
 
     	return $this->validate($request, $rules, $custom_message);
     }
+
+    public function deleteBus(Request $request, $id)
+    {
+    	$bus_busy_in_booking = DB::table('booking')->where('bus_id', $id)->count();
+    	if ( $request->method() == "DELETE" && $bus_busy_in_booking == 0 ) {
+    		DB::table('buses')->where('id', $id)->delete();
+    		Session::flash('msg', 'Selected Bus has been deleted successfully');
+    		return redirect('admin/bus-list');
+    	}
+    	return redirect('admin/bus-list');
+    }
 }

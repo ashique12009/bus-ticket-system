@@ -39,3 +39,4 @@ Route::post('admin-login', 'BusAuthController@adminLogin')->name('admin-login');
 Route::get('admin-logout', 'BusAuthController@adminLogout');
 Route::get('admin/add-bus', 'AdminController@showAddBusForm');
 Route::post('admin-add-bus', 'AdminController@addBus')->name('admin-add-bus');
+Route::delete('admin/delete-bus/{id}', 'AdminController@deleteBus');

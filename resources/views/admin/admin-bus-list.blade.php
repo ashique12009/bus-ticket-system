@@ -14,7 +14,11 @@
         </div>
         <div class="panel-body">
         <div class="row">
-          <div class="col-md-12 col-lg-12"> 
+          @if ( Session::has('msg') )
+            <p class="alert alert-info">{{ Session::get('msg') }}</p>
+          @endif
+
+          <div class="col-md-12 col-lg-12">
               <table class="table table-user-information">
                 <tbody>
                   <tr>
@@ -22,6 +26,7 @@
                     <th>Bus Name</th>
                     <th>Bus Total Seat</th>
                     <th>Bus Created Date</th>
+                    <th>Action</th>
                   </tr>
                   @if ( count($bus_info) > 0 )
                     @foreach ( $bus_info as $data )
@@ -30,6 +35,13 @@
                         <td>{{ $data->bus_name }}</td>
                         <td>{{ $data->total_seat }}</td>
                         <td>{{ $data->created_at }}</td>
+                        <td>
+                          <form action="{{ '/admin/delete-bus/' . $data->id }}" method="post">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                            <input type="submit" name="submit" value="Delete" class="btn btn-sm btn-danger" />
+                          </form>
+                        </td>
                       </tr>
                     @endforeach
                   @endif 
