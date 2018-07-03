@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use DB;
+use Session;
+
+class AdminController extends Controller
+{
+	public function __construct()
+	{
+		$this->middleware('adminauth');
+	}
+
+    public function index()
+    {
+    	return view('admin.admin-dashboard');
+    }
+
+    public function busList()
+    {
+    	$bus_info = DB::table('buses')->get();
+    	return view('admin.admin-bus-list', ['bus_info' => $bus_info]);
+    }
+
+    public function showAddBusForm()
+    {
+    	return view('admin.admin-add-bus');
+    }
+
+    public function addBus(Request $request)
+    {
+    	$this->bus_validation($request);
+    	$bus_name 	= $request->get('bus_name');
+    	$total_seat = $request->get('total_seat');
+    	$insertionData = [
+    		'bus_name' 		=> $bus_name,
+    		'total_seat' 	=> $total_seat,
+    		'created_at' 	=> \Carbon\Carbon::now(),
+    		'updated_at' 	=> \Carbon\Carbon::now()
+    	];
+    	DB::table('buses')->insert($insertionData);
+    	Session::flash('msg', 'A new bus inserted successfully');
+    	return redirect('admin/add-bus');
+    }
+
+    public function bus_validation($request)
+    {
+    	$rules = [
+    		'bus_name' 		=> 'required',
+    		'total_seat' 	=> 'required'
+    	];
+
+    	$custom_message = [
+    		'bus_name.required' 	=> 'Bus name cannot be empty',
+    		'total_seat.required' 	=> 'Total seat cannot be empty'
+    	];
+
+    	return $this->validate($request, $rules, $custom_message);
+    }
+}
