@@ -78,16 +78,21 @@ class CustomerController extends Controller
     {
         $bus_info = DB::table('buses')->where('id', $id)->get();
         //Make array for available seat numbers
-        $booking_info = DB::table('booking')->where('bus_id', $id)->where('status', 0)->get();
-        $available_seat_no = [];
+        $booking_info = DB::table('booking')->where('bus_id', $id)->where('status', 1)->get();
+        
+        $busy_seat_array = [];
         if ( count($booking_info) > 0 ) {
-
+            foreach ( $booking_info as $value ) {
+                array_push($busy_seat_array, $value->seat_no);
+            }
         }
-        return view('customer.booking-form', ['bus_info' => $bus_info, 'available_seat_no' => $available_seat_no]);
+        
+        return view('customer.booking-form', ['bus_info' => $bus_info, 'busy_seats' => $busy_seat_array]);
     }
 
     public function bookingNow(Request $request)
     {
+        $this->booking_validation($request);
         $user_id = auth()->user()->id;
         $bus_id = $request->get('bus_id');
         $seat_no = $request->get('seat_no');
@@ -115,6 +120,19 @@ class CustomerController extends Controller
             Session::flash('err-msg', 'This Seat is Unavailable');
             return redirect('show-bus-list');
         }
+    }
+
+    public function booking_validation($request)
+    {
+        $rules = [
+            'seat_no' => 'required|numeric'
+        ];
+
+        $custom_message = [
+            'seat_no.required' => 'Please input your seat number'
+        ];
+
+        return $this->validate($request, $rules, $custom_message);
     }
 
 }
