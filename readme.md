@@ -13,7 +13,7 @@ There are several features here in this project and those are listing below:
 - Credentials: Give you later.
 - Customer can edit their profile.
 - Customer can booking their seat by choosing from available seat.
-- Customer can ses bus list and choose which bus is suitable for them.
+- Customer can see bus list and choose which bus is suitable for them.
 
 ## Some Screenshots
 
