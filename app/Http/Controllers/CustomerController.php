@@ -164,17 +164,17 @@ class CustomerController extends Controller
                     return redirect()->route('show-bus-list');
                 } 
                 else {
-                    \Session::put('error', 'Money not add in wallet!!');
+                    Session::flash('error', 'Money not add in wallet!!');
                     return redirect()->route('show-bus-list');
                 }
             } catch (Exception $e) {
-                \Session::put('error',$e->getMessage());
+                Session::flash('error',$e->getMessage());
                 return redirect()->route('show-bus-list');
             } catch(\Cartalyst\Stripe\Exception\CardErrorException $e) {
-                \Session::put('error', $e->getMessage());
+                Session::flash('error', $e->getMessage());
                 return redirect()->route('show-bus-list');
             } catch(\Cartalyst\Stripe\Exception\MissingParameterException $e) {
-                \Session::put('error', $e->getMessage());
+                Session::flash('error', $e->getMessage());
                 return redirect()->route('show-bus-list');
             }
         } 
