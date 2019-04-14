@@ -17,10 +17,12 @@ Route::get('/', function () {
 // Registration Routes
 Route::get('registration', 'BusAuthController@showRegistrationForm');
 Route::post('register', 'BusAuthController@register')->name('register');
+
 // Login Routes
 Route::get('login-form', 'BusAuthController@showLoginForm');
 Route::post('login', 'BusAuthController@login')->name('login');
 Route::get('logout', 'BusAuthController@logout');
+
 // Customer Routes
 Route::get('customer-welcome', 'CustomerController@index');
 Route::get('customer-profile', 'CustomerController@profile');
@@ -43,3 +45,6 @@ Route::get('admin-logout', 'BusAuthController@adminLogout');
 Route::get('admin/add-bus', 'AdminController@showAddBusForm');
 Route::post('admin-add-bus', 'AdminController@addBus')->name('admin-add-bus');
 Route::delete('admin/delete-bus/{id}', 'AdminController@deleteBus');
+
+Route::get('login/facebook', 'Auth\LoginController@redirectToProvider');
+Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback');

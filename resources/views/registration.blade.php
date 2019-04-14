@@ -35,10 +35,19 @@
 						  	<label for="exampleInputPassword1">Confirm Password</label>
 						  	<input name="password_confirmation" class="form-control" placeholder="Confirm Password" type="password">
 						</div>
+						<input type="hidden" name="provider" value="native">
+						<input type="hidden" name="provider_id" value="0">
 						<button type="reset" class="btn btn-default">Reset</button>
 						<button type="submit" class="btn btn-primary">Register</button>
 					</fieldset>
 				</form>
+				<div class="form-group">
+					<div class="col-md-6 col-md-offset-4">
+						<a href="{{ url('/auth/github') }}" class="btn btn-github"><i class="fa fa-github"></i> Github</a>
+						<a href="{{ url('/auth/twitter') }}" class="btn btn-twitter"><i class="fa fa-twitter"></i> Twitter</a>
+						<a href="{{ url('/auth/facebook') }}" class="btn btn-facebook"><i class="fa fa-facebook"></i> Facebook</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

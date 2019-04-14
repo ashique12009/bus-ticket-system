@@ -35,7 +35,7 @@ class BusAuthController extends Controller
             'email.required' => 'Email cannot be blank!'
         ];
 
-    	return $this->validate($request, $rules, $customMessages);
+        return $this->validate($request, $rules, $customMessages);
     }
 
     public function showLoginForm()

@@ -24,9 +24,9 @@ class AdminAuth
                 'password' => $password
             ];
             
-            $user_info  = DB::table('users')
-                        ->where('email', $email)
-                        ->get();
+            $user_info = DB::table('users')
+                            ->where('email', $email)
+                            ->get();
             if ( $user_info[0]->admin == 1 ) {
                 return $next($request);
             }

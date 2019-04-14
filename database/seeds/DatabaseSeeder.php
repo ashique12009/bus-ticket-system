@@ -12,5 +12,14 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
+        DB::table('posts')->truncate();
+
+        DB::table('posts')->insert(
+            [
+                'title' => 'title goes here'
+            ]
+        );
+
+        $this->call('DatabaseSeeder');
     }
 }
