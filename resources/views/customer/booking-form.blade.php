@@ -14,6 +14,10 @@
           @if ( Session::has('msg') )
             <p class="alert alert-info">{{ Session::get('msg') }}</p>
           @endif
+          
+          @if ( Session::has('error') )
+            <p class="alert alert-danger">{{ Session::get('error') }}</p>
+          @endif
 
           @if ( count($errors) > 0 )
             @foreach ( $errors->all() as $error )
@@ -36,6 +40,23 @@
                     <input type="text" name="seat_no" value="">
                     <input type="hidden" name="bus_id" value="{{ $bus_info[0]->id }}">
                   </td>
+                  </tr>
+                  <tr>
+                    <td>Booking Cost:</td>
+                    <td><input type="text" name="book_cost" id="book_cost" value="10" readonly>$</td>
+                  </tr>
+                  <tr>
+                    <td>Stripe Card Number:</td>
+                    <td><input type="text" name="card_no" id="card_no" value="" size="20"></td>
+                  </tr>
+                  <tr>
+                    <td>Stripe CVV Number:</td>
+                    <td><input type="text" name="cvvNumber" id="cvvNumber" value="" size="4"></td>
+                  </tr>
+                  <tr>
+                    <td>Stripe Card Expiration:[MM-YYYY]</td>
+                    <td><input type="text" name="ccExpiryMonth" id="ccExpiryMonth" value="" size="2">
+                      <input type="text" name="ccExpiryYear" id="ccExpiryYear" value="" size="4"></td>
                   </tr>
                   <tr>
                   <tr>
