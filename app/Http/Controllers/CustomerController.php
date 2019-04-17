@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Customer;
-use Session;
 use DB;
 use Stripe\Error\Card;
 use Cartalyst\Stripe\Stripe;
+use App\Order;
 
 class CustomerController extends Controller
 {
@@ -57,7 +57,7 @@ class CustomerController extends Controller
                 'phone'     => $phone
             ];
             Customer::where('user_id', $user_id)->update($update_data);
-            Session::flash('msg', 'Customer information updated successfully');
+            session()->flash('msg', 'Customer information updated successfully');
             return redirect('edit-profile-form');
         }
     }
@@ -157,29 +157,45 @@ class CustomerController extends Controller
                         'updated_at'    => \Carbon\Carbon::now()
                     ];
                     DB::table('booking')->insert($insertData);
-                    Session::flash('msg', 'Seat Booking has been done successfully');
+
+                    Order::create([
+                        //'status' => OrderStatus::$INIT,
+                        'user_id' => $user_id,
+                        'name' => auth()->user()->fname . ' ' . auth()->user()->lname,
+                        'email' => auth()->user()->email,
+                        'billing_address' => isset($input['billing']['address']) ? $input['billing']['address'] : '',
+                        'shipping_address' => isset($input['shipping']['address']) ? $input['shipping']['address'] : '',
+                        'payment_type' => isset($input['payment_type']) ? $input['payment_type'] : 'stripe',
+                        'card_number' => $input['card_no'] != null ? encrypt($input['card_no']) : encrypt(null),
+                        'card_full_name' => isset($input['card']['card_brand']) ? encrypt($input['card']['card_brand']) : encrypt(null),
+                        'card_expire' => encrypt($input['ccExpiryMonth'].'/'.$input['ccExpiryYear']),
+                        'card_cvc' => isset($input['cvvNumber']) ? encrypt($input['cvvNumber']) : encrypt(null),
+                        'total' => $input['book_cost']
+                    ]);
+
+                    session()->flash('msg', 'Seat Booking has been done successfully');
                     //return redirect('show-bus-list');
                     // echo "<pre>";
                     // print_r($charge);exit();
                     return redirect()->route('show-bus-list');
                 } 
                 else {
-                    Session::flash('error', 'Money not add in wallet!!');
+                    session()->flash('error', 'Money not add in wallet!!');
                     return redirect()->route('show-bus-list');
                 }
             } catch (Exception $e) {
-                Session::flash('error',$e->getMessage());
+                session()->flash('error',$e->getMessage());
                 return redirect()->route('show-bus-list');
             } catch(\Cartalyst\Stripe\Exception\CardErrorException $e) {
-                Session::flash('error', $e->getMessage());
+                session()->flash('error', $e->getMessage());
                 return redirect()->route('show-bus-list');
             } catch(\Cartalyst\Stripe\Exception\MissingParameterException $e) {
-                Session::flash('error', $e->getMessage());
+                session()->flash('error', $e->getMessage());
                 return redirect()->route('show-bus-list');
             }
         } 
         else {
-            Session::flash('err-msg', 'This Seat is Unavailable');
+            session()->flash('err-msg', 'This Seat is Unavailable');
             return redirect('show-bus-list');
         }
     }

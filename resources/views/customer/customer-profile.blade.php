@@ -17,7 +17,7 @@
         <div class="panel-body">
         <div class="row">
           <div class="col-md-3 col-lg-3" align="center">
-            @if ( $customer_info[0]->photo == "" ) 
+            @if ( isset($customer_info[0]->photo) && $customer_info[0]->photo == "" ) 
               <img alt="User Pic" src="/images/pp.png" class="img-circle img-responsive">
             @else
               <img src="/images/{{ $customer_info[0]->photo }}" class="img-circle img-responsive" alt="User Pic">
@@ -28,11 +28,11 @@
                 <tbody>
                   <tr>
                   <td>Address:</td>
-                  <td>{{ $customer_info[0]->address }}</td>
+                  <td>{{ isset($customer_info[0]->address) ? $customer_info[0]->address : '' }}</td>
                   </tr>
                   <tr>
                   <td>Phone:</td>
-                  <td>{{ $customer_info[0]->phone }}</td>
+                  <td>{{ isset($customer_info[0]->phone) ? $customer_info[0]->phone : '' }}</td>
                   </tr>
                 </tbody>
               </table>
