@@ -19,9 +19,12 @@ Route::get('registration', 'BusAuthController@showRegistrationForm');
 Route::post('register', 'BusAuthController@register')->name('register');
 
 // Login Routes
-Route::get('login-form', 'BusAuthController@showLoginForm');
+Route::get('login-form', 'BusAuthController@showLoginForm')->name('login-form');
 Route::post('login', 'BusAuthController@login')->name('login');
 Route::get('logout', 'BusAuthController@logout');
+
+// Verify account
+Route::get('/token/{token}', 'BusAuthController@verify')->name('user.verification');
 
 // Customer Routes
 Route::get('customer-welcome', 'CustomerController@index');

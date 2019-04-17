@@ -163,6 +163,8 @@ class CustomerController extends Controller
                         'user_id' => $user_id,
                         'name' => auth()->user()->fname . ' ' . auth()->user()->lname,
                         'email' => auth()->user()->email,
+                        'order_number' => 'Ord-' . $user_id . time(),
+                        'invoice_number' => 'Inv-' . $user_id . time(),
                         'billing_address' => isset($input['billing']['address']) ? $input['billing']['address'] : '',
                         'shipping_address' => isset($input['shipping']['address']) ? $input['shipping']['address'] : '',
                         'payment_type' => isset($input['payment_type']) ? $input['payment_type'] : 'stripe',

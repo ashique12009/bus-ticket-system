@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use DB;
+use App\Notifications\VerifyRegistration;
 
 class BusAuthController extends Controller
 {
@@ -16,8 +17,35 @@ class BusAuthController extends Controller
     public function register(Request $request)
     {
     	$this->registration_validation($request);
-    	User::create($request->all());
-    	return redirect('/')->with('Status', 'Registration complete, You can login now.');
+        // User::create($request->all());
+
+        $user = User::create([
+            'fname' => $request->fname,
+            'lname' => $request->lname,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'provider' => 'native',
+            'provider_id' => 0,
+            'remember_token' => str_random(40)
+        ]);
+
+        $user->notify(new VerifyRegistration($user));
+        
+    	return redirect('/')->with('Status', 'Please check your email to verify first then login.');
+    }
+
+    public function verify($token)
+    {
+        $user = User::where('remember_token', $token)->first();
+        if ( ! is_null($user) ) {
+            $user->verified = 1;
+            $user->remember_token = null;
+            $user->save();
+            session()->flash('msg', 'User verified successfully. Now you can login with your email and password.');
+        } else {
+            session()->flash('err-msg', 'Sorry! your token is not matched!');
+        }
+        return redirect('login-form');
     }
 
     public function registration_validation($request)
