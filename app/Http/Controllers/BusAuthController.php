@@ -74,15 +74,22 @@ class BusAuthController extends Controller
     public function login(Request $request)
     {
         $this->login_validation($request);
-        if ( auth()->attempt(request(['email', 'password'])) == false ) {
-            return back()->withErrors(['messages' => 'Invalid email or password.']);
+
+        $credentials = [
+            'email' => $request['email'],
+            'password' => $request['password']
+        ];
+
+        if ( auth()->attempt($credentials) ) {
+            $user_info = auth()->user();
+            $first_name = $user_info->fname;
+            $status = 'Welcome Customer';
+            $data = ['fname' => $first_name, 'Status' => $status];
+            return redirect()->to('customer-welcome')->with($data);
         }
         
-        $user_info = auth()->user();
-        $first_name = $user_info->fname;
-        $status = 'Welcome Customer';
-        $data = ['fname' => $first_name, 'Status' => $status];
-        return redirect()->to('customer-welcome')->with($data);
+        return back()->withErrors(['messages' => 'Invalid email or password.']);
+        
     }
 
     public function login_validation($request)
